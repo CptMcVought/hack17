@@ -84,7 +84,7 @@
 
       function calculateAndDisplayRoute(directionsService, directionsDisplay) {
         directionsService.route({
-          origin: document.getElementById('start').value,
+          origin: 'lat: 55.930, lng: -3.118',
           destination: document.getElementById('end').value,
           travelMode: 'DRIVING'
         }, function(response, status) {
