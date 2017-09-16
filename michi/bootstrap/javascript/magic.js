@@ -147,8 +147,9 @@ function getTheWayPoints(response) {
     for (var j = 0; j < weatherPoint.length; j++) {
         routevalue += weatherPoint[j];
     }
-    console.log(routevalue);
   distanceStuff();
+
+  return routevalue/weatherPoint.length;
 }
 
 function geocode_weather(latitude,longitude) {
@@ -303,7 +304,10 @@ function drawMap() {
       });
       requestDirections(startLat,startLng,destinationLat,destinationLng, latLngD, function(result){
         resulti[2] = result;
-        renderDirections();
+        var millisecondsToWait = 1000;
+        setTimeout(function() {
+          renderDirections();
+        }, millisecondsToWait);
       });
     });
   };
@@ -312,9 +316,10 @@ function drawMap() {
 
 function renderDirections() {
   console.log("render");
-  for(var i;i<3;i++){
+  for(var i = 0; i < 3; i++){
     var directionsRenderer = new google.maps.DirectionsRenderer();
     directionsRenderer.setMap(map);
+    if (i == 0) directionsRenderer.set('directions', null);
     directionsRenderer.setDirections(resulti[i]);
   }
 }
