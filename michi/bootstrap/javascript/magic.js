@@ -1,5 +1,6 @@
 var map, marker, startLat, startLng, destinationLat, destinationLng;
 var latLngC, latLngD, latLngA;
+var result1,result2,result3;
 
 function initialize() {
     drawMap();
@@ -207,11 +208,7 @@ function distanceStuff() {
 }
 
 function drawMap() {
-  function renderDirections(result) {
-    var directionsRenderer = new google.maps.DirectionsRenderer();
-    directionsRenderer.setMap(map);
-    directionsRenderer.setDirections(result);
-  }
+  
 
   function requestDirections(startLat,startLng,destinationLat,destinationLng, wegPunkt) {
     var directionsService = new google.maps.DirectionsService();
@@ -230,11 +227,17 @@ function drawMap() {
       ],
       travelMode: google.maps.DirectionsTravelMode.DRIVING
     }, function(result) {
-      renderDirections(result);
+      return result;
     });
   }
 
   var onChangeHandler = function() {
+    var polylineOptionsActual = {
+      strokeColor: '#459294',
+      strokeOpacity: 1.0,
+      strokeWeight: 10
+      };
+
     var directionsService = new google.maps.DirectionsService();
     directionsService.route({
       origin: new google.maps.LatLng(startLat,startLng),
@@ -242,12 +245,23 @@ function drawMap() {
       travelMode: google.maps.DirectionsTravelMode.DRIVING
     }, function(result) {
       getTheWayPoints(result);
-      var directionsRenderer = new google.maps.DirectionsRenderer();
-      directionsRenderer.setMap(map);
-      directionsRenderer.setDirections(result);
-      requestDirections(startLat,startLng,destinationLat,destinationLng, latLngC);
-      requestDirections(startLat,startLng,destinationLat,destinationLng, latLngD);
+      result1 = result;
+      result2 = requestDirections(startLat,startLng,destinationLat,destinationLng, latLngC);
+      result3 = requestDirections(startLat,startLng,destinationLat,destinationLng, latLngD);
+      renderDirections();
     });
   };
   document.getElementById('submit').addEventListener('click', onChangeHandler);
 }
+
+function renderDirections() {
+    var directionsRenderer1 = new google.maps.DirectionsRenderer();
+    directionsRenderer.setMap(map);
+    directionsRenderer.setDirections(result1);
+    var directionsRenderer2 = new google.maps.DirectionsRenderer();
+    directionsRenderer.setMap(map);
+    directionsRenderer.setDirections(result2);
+    var directionsRenderer3 = new google.maps.DirectionsRenderer();
+    directionsRenderer.setMap(map);
+    directionsRenderer.setDirections(result2);
+  }
