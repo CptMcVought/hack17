@@ -1,0 +1,20 @@
+<!DOCTYPE<!DOCTYPE html>
+<html>
+<body>
+
+<h2>Create Object from JSON String</h2>
+
+<p id="demo"></p>
+
+<script>
+	var Httpreq = new XMLHttpRequest();
+	Httpreq.open("GET",'https://api.weather.com/v1/geocode/47.390037/8.515357/forecast/daily/3day.json?apiKey=626505b9091f4982a505b9091f798235&units=m',false);
+	Httpreq.send(null);
+	obj = Httpreq.responseText;
+
+document.write(obj)
+</script>
+
+</body>
+</html>
+
