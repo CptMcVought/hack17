@@ -15,7 +15,7 @@ $( document ).ready(function() {
 	    var width = $( window ).width();
 	    console.log("will animiere!");
 	  	$( ".wrapright" ).animate({
-	    	left: 0.4*width
+	    	left: 0.4*width-60
 	  	}, 800, function() {
 	    // Animation complete.
 	  	});

@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css?family=Noto+Sans:700');
 body, html{
 	width: 100%;
 	height: 100%;
@@ -67,6 +68,7 @@ button{
 
 .pramie{
 	width: 60vw;
+	margin-left: 60px;
 	background: #ffffff url("../img/zurich1.jpg") no-repeat right top;
 	background-size: cover;
 	height: 100%;
@@ -87,7 +89,7 @@ button{
 .wrappramie{
 	margin-left: auto;
 	margin-right: auto;
-	width: 80%;
+	width: 92%;
 	margin-top: 90px;
 	display: flex;
 	justify-content: space-evenly;
@@ -95,7 +97,24 @@ button{
 
 .pramiebox{
 	background-color: white;
-	width: 10vw;
-	height: 20vw;
-	box-shadow: rgba(0,0,0,0.1) 5px 0px 30px;
+	width: 16vw;
+	height: 28vw;
+	box-shadow: rgba(0,0,0,0.2) 5px 0px 30px;
+	filter: brightness(0.97);
+	transition: 0.25s ease;
+}
+.pramiebox:hover{
+	filter: brightness(1);
+	box-shadow: rgba(0,0,0,0.4) 5px 0px 30px;
+}
+h3{
+	font-size: 50px;
+    font-family: 'Noto Sans';
+    color: #4689C8;
+}
+h5{
+	color: #4689C8;
+}
+.pramiebox button{
+	background-color: #B6DDFE;
 }
