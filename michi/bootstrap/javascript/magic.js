@@ -199,7 +199,6 @@ function getTheWayPoints(response, directionsService) {
     }
     distanceStuff(directionsService);
     for (var j = 0; j < weatherPoint.length; j++) {
-        console.log(weatherPoint[j] + "," + wayPointLat[numbOfWeatherpoints*j] + "," + wayPointLng[numbOfWeatherpoints*j]);
         routevalue += weatherPoint[j];
     }
     distanceStuff(750, directionsService);
@@ -235,8 +234,6 @@ function geocode_weather(latitude,longitude) {
         var prob = obj_json.forecasts[1].day.pop;
         var precipitation = obj_json.forecasts[1].day.qpf;
     }
-
-    console.log(prob, precipitation, prob*precipitation);
 
     return {probability: prob, quantity: precipitation, expectation: prob*precipitation/100};
 }
