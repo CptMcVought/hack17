@@ -1,5 +1,6 @@
 var map, marker, startLat, startLng, destinationLat, destinationLng;
 var latLngC, latLngD, latLngA;
+var routeValueA, routeValueB, routeValueC;
 
 function initialize() {
     drawMap();
@@ -115,11 +116,10 @@ function fillInDestinationAddress() {
 function getTheWayPoints(response) {
     //console.log(response.routes[0].legs[0].steps.length);
     //console.log(response.routes[0].legs[0].steps[0].lat_lngs[0].lat());
-    console.log(response.routes);
+    //console.log(response.routes);
 
     var numbOfPoints = response.routes[0].legs[0].steps.length;
     var numbOfWeatherpoints = Math.round(numbOfPoints/20)
-    console.log(numbOfWeatherpoints);
     var wayPointLat = new Array;
     var wayPointLng = new Array;
     var weatherPoint = new Array;
@@ -143,6 +143,7 @@ function getTheWayPoints(response) {
     for (var j = 0; j < weatherPoint.length; j++) {
         routevalue += weatherPoint[j];
     }
+    console.log(routevalue);
   distanceStuff();
 }
 
@@ -179,75 +180,74 @@ function geocode_weather(latitude,longitude) {
     return {probability: prob, quantity: precipitation, expectation: prob*precipitation/100};
 }
 
-function distanceStuff() {
-  console.log('hoi ich bin im distance');
+  function distanceStuff() {
+    console.log('hoi ich bin im distance');
 
-  latLngA = new google.maps.LatLng(startLat,startLng);
-  var latLngB = new google.maps.LatLng(destinationLat, destinationLng);
-  var distance = google.maps.geometry.spherical.computeDistanceBetween (latLngA, latLngB);
-  //console.log(distance);
+    latLngA = new google.maps.LatLng(startLat,startLng);
+    var latLngB = new google.maps.LatLng(destinationLat, destinationLng);
+    var distance = google.maps.geometry.spherical.computeDistanceBetween (latLngA, latLngB);
+    //console.log(distance);
 
-  latLngA = new google.maps.LatLng(startLat,startLng);
-  var latLngB = new google.maps.LatLng(destinationLat, startLng);
-  var xDistance = google.maps.geometry.spherical.computeDistanceBetween (latLngA, latLngB);
+    latLngA = new google.maps.LatLng(startLat,startLng);
+    var latLngB = new google.maps.LatLng(destinationLat, startLng);
+    var xDistance = google.maps.geometry.spherical.computeDistanceBetween (latLngA, latLngB);
 
-  //console.log(xDistance);
+    //console.log(xDistance);
 
-  latLngA = new google.maps.LatLng(startLat,startLng);
-  var latLngB = new google.maps.LatLng(startLat, destinationLng);
-  var yDistance = google.maps.geometry.spherical.computeDistanceBetween (latLngA, latLngB);
+    latLngA = new google.maps.LatLng(startLat,startLng);
+    var latLngB = new google.maps.LatLng(startLat, destinationLng);
+    var yDistance = google.maps.geometry.spherical.computeDistanceBetween (latLngA, latLngB);
 
-  //console.log(yDistance);
+    //console.log(yDistance);
 
-  distanceThreshold = distance/2000;
+    distanceThreshold = distance/2000;
 
-  latLngC = new google.maps.LatLng((startLat + destinationLat)/2 - 1/111*distanceThreshold/2, (startLng + destinationLng)/2);
-  latLngD = new google.maps.LatLng((startLat + destinationLat)/2 + 1/111*distanceThreshold/2, (startLng + destinationLng)/2);
-  console.log((startLat + destinationLat)/2 - 1/111*distanceThreshold/2);
-}
-
-function drawMap() {
-  function renderDirections(result) {
-    var directionsRenderer = new google.maps.DirectionsRenderer();
-    directionsRenderer.setMap(map);
-    directionsRenderer.setDirections(result);
+    latLngC = new google.maps.LatLng((startLat + destinationLat)/2 - 1/111*distanceThreshold/2, (startLng + destinationLng)/2);
+    latLngD = new google.maps.LatLng((startLat + destinationLat)/2 + 1/111*distanceThreshold/2, (startLng + destinationLng)/2);
   }
 
-  function requestDirections(startLat,startLng,destinationLat,destinationLng, wegPunkt) {
-    var directionsService = new google.maps.DirectionsService();
-
-    console.log('furz');
-    console.log(wegPunkt.lat(), wegPunkt.lng());
-
-    directionsService.route({
-      origin: new google.maps.LatLng(startLat,startLng),
-      destination: new google.maps.LatLng(destinationLat,destinationLng),
-      waypoints: [
-        {
-          location: wegPunkt,
-          stopover: false
-        }
-      ],
-      travelMode: google.maps.DirectionsTravelMode.DRIVING
-    }, function(result) {
-      renderDirections(result);
-    });
-  }
-
-  var onChangeHandler = function() {
-    var directionsService = new google.maps.DirectionsService();
-    directionsService.route({
-      origin: new google.maps.LatLng(startLat,startLng),
-      destination: new google.maps.LatLng(destinationLat,destinationLng),
-      travelMode: google.maps.DirectionsTravelMode.DRIVING
-    }, function(result) {
-      getTheWayPoints(result);
+  function drawMap() {
+    function renderDirections(result) {
       var directionsRenderer = new google.maps.DirectionsRenderer();
       directionsRenderer.setMap(map);
       directionsRenderer.setDirections(result);
-      requestDirections(startLat,startLng,destinationLat,destinationLng, latLngC);
-      requestDirections(startLat,startLng,destinationLat,destinationLng, latLngD);
-    });
-  };
-  document.getElementById('submit').addEventListener('click', onChangeHandler);
-}
+    }
+
+    function requestDirections(startLat,startLng,destinationLat,destinationLng, wegPunkt, routeValue) {
+      var directionsService = new google.maps.DirectionsService();
+
+      console.log('furz');
+
+      directionsService.route({
+        origin: new google.maps.LatLng(startLat,startLng),
+        destination: new google.maps.LatLng(destinationLat,destinationLng),
+        waypoints: [
+          {
+            location: wegPunkt,
+            stopover: false
+          }
+        ],
+        travelMode: google.maps.DirectionsTravelMode.DRIVING
+      }, function(result) {
+        getTheWayPoints(result);
+        renderDirections(result);
+      });
+    }
+
+    var onChangeHandler = function() {
+      var directionsService = new google.maps.DirectionsService();
+      directionsService.route({
+        origin: new google.maps.LatLng(startLat,startLng),
+        destination: new google.maps.LatLng(destinationLat,destinationLng),
+        travelMode: google.maps.DirectionsTravelMode.DRIVING
+      }, function(result) {
+        getTheWayPoints(result);
+        var directionsRenderer = new google.maps.DirectionsRenderer();
+        directionsRenderer.setMap(map);
+        directionsRenderer.setDirections(result);
+        requestDirections(startLat,startLng,destinationLat,destinationLng, latLngC, routeValueB);
+        requestDirections(startLat,startLng,destinationLat,destinationLng, latLngD, routeValueC);
+      });
+    };
+    document.getElementById('submit').addEventListener('click', onChangeHandler);
+  }
