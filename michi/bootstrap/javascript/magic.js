@@ -116,8 +116,8 @@ function fillInDestinationAddress() {
 }
 
 function calculateAndDisplayRoute(directionsService, directionsDisplay) {
-    console.log(startLat,startLng);
-    console.log(destinationLat,destinationLng);
+    //console.log(startLat,startLng);
+    //console.log(destinationLat,destinationLng);
 
     var start = {lat: startLat, lng: startLng};
     directionsService.route({
@@ -136,17 +136,21 @@ function calculateAndDisplayRoute(directionsService, directionsDisplay) {
 
 
 function getTheWayPoints(response) {
-    console.log(response.routes[0].legs[0].steps.length);
-    console.log(response.routes[0].legs[0].steps[0].lat_lngs[0].lat());
+    //console.log(response.routes[0].legs[0].steps.length);
+    //console.log(response.routes[0].legs[0].steps[0].lat_lngs[0].lat());
 
     var numbOfPoints = response.routes[0].legs[0].steps.length;
     var wayPointLat = new Array;
     var wayPointLng = new Array;
-
-    for (var i = 0; i < numbOfPoints; i++){
-      wayPointLat[i] = response.routes[0].legs[0].steps[i].lat_lngs[0].lat();
-      wayPointLng[i] = response.routes[0].legs[0].steps[i].lat_lngs[0].lng()
+    var j = 0;
+    for (var i = 0; i < numbOfPoints; i++) {
+      if (i % 10 == 0) {
+        j++;
+        wayPointLat[j] = response.routes[0].legs[0].steps[i].lat_lngs[0].lat();
+        wayPointLng[j] = response.routes[0].legs[0].steps[i].lat_lngs[0].lng()
+      }
       //Timi da chunnt din JSON GAGGI iä
     }
+  console.log(wayPointLat.length);
 }
 
