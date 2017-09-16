@@ -19,7 +19,6 @@ function geocode_weather(latitude,longitude) {
 		document.write(obj_json.forecasts[i].fcst_valid_local);
 	}
 	*/
-	console.log(obj_json.forecasts[0].day);
 	if (obj_json.forecasts[0].day) {
 		var prob = obj_json.forecasts[0].day.pop;
 		var precipitation = obj_json.forecasts[0].day.qpf;
