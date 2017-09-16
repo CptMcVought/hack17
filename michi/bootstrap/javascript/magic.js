@@ -277,6 +277,7 @@ function drawMap() {
           stopover: false
         }
       ],
+      optimizeWaypoints: true,
       travelMode: google.maps.DirectionsTravelMode.DRIVING
     }, function(result) {
       return result;
