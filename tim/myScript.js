@@ -6,5 +6,8 @@ function geocode_weather(latitude,longitude) {
 	obj_text = Httpreq.responseText;
 	obj_json = JSON.parse(obj_text);
 
-	return JSON.stringify(obj_json.forecasts[0].day.temp);
+	var prob = obj_json.forecasts[0].day.pop;
+	var precipitation = obj_json.forecasts[0].day.qpf
+
+	return prob*precipitation/100;
 }
