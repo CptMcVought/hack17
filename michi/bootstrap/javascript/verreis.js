@@ -20,4 +20,21 @@ $( document ).ready(function() {
 	    // Animation complete.
 	  	});
 	});
+
+    $( ".map" ).click(function() {
+    	closePramie();
+	});
+
 });
+
+
+
+function closePramie(){
+	var width = $( window ).width();
+    	console.log("will animiere!");
+  $( ".wrapright" ).animate({
+    left: width-60
+  }, 800, function() {
+    // Animation complete.
+  });
+}
