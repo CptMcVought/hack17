@@ -90,15 +90,22 @@ button{
 	margin-left: auto;
 	margin-right: auto;
 	width: 92%;
-	margin-top: 90px;
+	margin-top: 120px;
 	display: flex;
-	justify-content: space-evenly;
+	justify-content: space-between;
+}
+
+.wrappramie2{
+	margin-left: auto;
+	margin-right: auto;
+	width: 92%;
+	margin-top: 30px;
 }
 
 .pramiebox{
 	background-color: white;
 	width: 16vw;
-	height: 28vw;
+	height: 22vw;
 	box-shadow: rgba(0,0,0,0.2) 5px 0px 30px;
 	filter: brightness(0.97);
 	transition: 0.25s ease;

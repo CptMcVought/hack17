@@ -19,8 +19,15 @@ function geocode_weather(latitude,longitude) {
 		document.write(obj_json.forecasts[i].fcst_valid_local);
 	}
 	*/
-	var prob = obj_json.forecasts[0].day.pop;
-	var precipitation = obj_json.forecasts[0].day.qpf;
+	console.log(obj_json.forecasts[0].day);
+	if (obj_json.forecasts[0].day) {
+		var prob = obj_json.forecasts[0].day.pop;
+		var precipitation = obj_json.forecasts[0].day.qpf;
+	}
+	else {
+		var prob = obj_json.forecasts[1].day.pop;
+		var precipitation = obj_json.forecasts[1].day.qpf;
+	}
 
-	return prob*precipitation/100;
+	return {probability: prob, quantity: precipitation, expectation: prob*precipitation};
 }
