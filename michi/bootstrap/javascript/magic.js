@@ -187,10 +187,10 @@ function getTheWayPoints(response, directionsService) {
       }
     }
   //Timi da chunnt din JSON GAGGI iä
-  distanceStuff(750, directionsService);
+  distanceStuff(directionsService);
 }
 
-function distanceStuff(distanceThreshold) {
+function distanceStuff() {
 
   var latLngA = new google.maps.LatLng(startLat,startLng);
   var latLngB = new google.maps.LatLng(destinationLat, destinationLng);
@@ -209,6 +209,7 @@ function distanceStuff(distanceThreshold) {
 
   //console.log(yDistance);
 
+  distanceThreshold = distance;
 
   latLngC = new google.maps.LatLng((startLat + destinationLat)/2 - 1/111*distanceThreshold/2, (startLng + destinationLng)/2);
   latLngD = new google.maps.LatLng((startLat + destinationLat)/2 + 1/111*distanceThreshold/2, (startLng + destinationLng)/2);
