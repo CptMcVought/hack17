@@ -127,8 +127,15 @@ function calculateAndDisplayRoute(directionsService, directionsDisplay) {
     }, function(response, status) {
         if (status === 'OK') {
             directionsDisplay.setDirections(response);
+            console.log(response.routes);
+            console.log(response.routes[0].legs[0].steps[0].lat_lngs[0].lat());
         } else {
             window.alert('Directions request failed due to ' + status);
         }
     });
+}
+
+function getTheWayPoints(directionsService) {
+
+    console.log(wayPoints);
 }
