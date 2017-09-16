@@ -5,6 +5,7 @@ function initialize() {
 }
 var map, marker, startLat, startLng, destinationLat, destinationLng;
 var waypts = [];
+var latLngC, latLngD;
 
 
 function initMap() {
@@ -24,6 +25,36 @@ function initMap() {
         calculateAndDisplayRoute(directionsService, directionsDisplay);
     };
     document.getElementById('submit').addEventListener('click', onChangeHandler);
+
+    var onChangeHandler1 = function() {
+      if (waypts.length > 0) waypts.pop();
+      calculateAndDisplayRoute(directionsService, directionsDisplay);
+    };
+    document.getElementById('route1').addEventListener('mouseover', onChangeHandler1);
+
+    var onChangeHandler2 = function() {
+      if (waypts.length > 0) waypts.pop();
+      else {
+        waypts.push({
+          location: latLngC,
+          stopover: true
+        });
+      }
+      calculateAndDisplayRoute(directionsService, directionsDisplay);
+    };
+    document.getElementById('route2').addEventListener('mouseover', onChangeHandler2);
+
+    var onChangeHandler3 = function() {
+      if (waypts.length > 0) waypts.pop();
+      else {
+        waypts.push({
+          location: latLngD,
+          stopover: true
+        });
+      }
+      calculateAndDisplayRoute(directionsService, directionsDisplay);
+    };
+    document.getElementById('route3').addEventListener('mouseover', onChangeHandler3);
 }
 // This example displays an address form, using the autocomplete feature
 // of the Google Places API to help users fill in the information.
@@ -179,16 +210,6 @@ function distanceStuff(distanceThreshold) {
   //console.log(yDistance);
 
 
-  var latLngC = new google.maps.LatLng((startLat + destinationLat)/2 - 1/111*distanceThreshold/2, (startLng + destinationLng)/2);
-  var latLngD = new google.maps.LatLng((startLat + destinationLat)/2 + 1/111*distanceThreshold/2, (startLng + destinationLng)/2);
-
-  var start = {lat: startLat, lng: startLng};
-
-  if (waypts.length > 0) waypts.pop();
-  else {
-    waypts.push({
-      location: latLngD,
-      stopover: true
-    });
-  }
+  latLngC = new google.maps.LatLng((startLat + destinationLat)/2 - 1/111*distanceThreshold/2, (startLng + destinationLng)/2);
+  latLngD = new google.maps.LatLng((startLat + destinationLat)/2 + 1/111*distanceThreshold/2, (startLng + destinationLng)/2);
 }
