@@ -1,31 +1,24 @@
+var map, marker, startLat, startLng, destinationLat, destinationLng;
+var latLngC, latLngD, latLngA;
+
 function initialize() {
-    initMap();
+    drawMap();
     initAutocomplete();
     initDestinationAutocomplete();
+
+
+  var start = new google.maps.LatLng(47,8);
+  var myOptions = {
+    zoom:7,
+    mapTypeId: google.maps.MapTypeId.ROADMAP,
+    center: start
+  }
+
+    map = new google.maps.Map(document.getElementById('map'), myOptions);
+
+
 }
-var map, marker, startLat, startLng, destinationLat, destinationLng;
-var waypts = [];
-var latLngC, latLngD;
 
-
-function initMap() {
-    var directionsService = new google.maps.DirectionsService;
-    var directionsDisplay = new google.maps.DirectionsRenderer;
-    map = new google.maps.Map(document.getElementById('map'), {
-        center: {
-            lat: 46.90065,
-            lng: 8.536703
-        },
-        zoom: 8
-    });
-
-    directionsDisplay.setMap(map);
-
-    var onChangeHandler = function() {
-        calculateAndDisplayRoute(directionsService, directionsDisplay);
-    };
-    document.getElementById('submit').addEventListener('click', onChangeHandler);
-}
 // This example displays an address form, using the autocomplete feature
 // of the Google Places API to help users fill in the information.
 
@@ -119,31 +112,10 @@ function fillInDestinationAddress() {
     destinationLng = destinationAutocomplete.getPlace().geometry.location.lng();
 }
 
-function calculateAndDisplayRoute(directionsService, directionsDisplay) {
-    //console.log(startLat,startLng);
-    //console.log(destinationLat,destinationLng);
-
-    var start = {lat: startLat, lng: startLng};
-    directionsService.route({
-        origin: start,
-        destination: new google.maps.LatLng(destinationLat, destinationLng),
-        waypoints: waypts,
-        travelMode: document.getElementById('transport').value
-    }, function(response, status) {
-        if (status === 'OK') {
-            directionsDisplay.setDirections(response);
-            getTheWayPoints(response, directionsService);
-        } else {
-            window.alert('Directions request failed due to ' + status);
-        }
-    });
-}
-
-
-function getTheWayPoints(response, directionsService) {
+function getTheWayPoints(response) {
     //console.log(response.routes[0].legs[0].steps.length);
     //console.log(response.routes[0].legs[0].steps[0].lat_lngs[0].lat());
-    //console.log(response.routes);
+    console.log(response.routes);
 
     var numbOfPoints = response.routes[0].legs[0].steps.length;
     var numbOfWeatherpoints = Math.round(numbOfPoints/20)
@@ -167,13 +139,12 @@ function getTheWayPoints(response, directionsService) {
             else */weatherPoint[i/numbOfWeatherpoints] = geocode_weather(wayPointLat[i],wayPointLng[i]).expectation;
         }
     }
-    distanceStuff(directionsService);
+
     for (var j = 0; j < weatherPoint.length; j++) {
         console.log(weatherPoint[j] + "," + wayPointLat[numbOfWeatherpoints*j] + "," + wayPointLng[numbOfWeatherpoints*j]);
         routevalue += weatherPoint[j];
     }
-    distanceStuff(750, directionsService);
-
+  distanceStuff();
 }
 
 function geocode_weather(latitude,longitude) {
@@ -212,26 +183,74 @@ function geocode_weather(latitude,longitude) {
 }
 
 function distanceStuff() {
+  console.log('hoi ich bin im distance');
 
-  var latLngA = new google.maps.LatLng(startLat,startLng);
+  latLngA = new google.maps.LatLng(startLat,startLng);
   var latLngB = new google.maps.LatLng(destinationLat, destinationLng);
   var distance = google.maps.geometry.spherical.computeDistanceBetween (latLngA, latLngB);
   //console.log(distance);
 
-  var latLngA = new google.maps.LatLng(startLat,startLng);
+  latLngA = new google.maps.LatLng(startLat,startLng);
   var latLngB = new google.maps.LatLng(destinationLat, startLng);
   var xDistance = google.maps.geometry.spherical.computeDistanceBetween (latLngA, latLngB);
 
   //console.log(xDistance);
 
-  var latLngA = new google.maps.LatLng(startLat,startLng);
+  latLngA = new google.maps.LatLng(startLat,startLng);
   var latLngB = new google.maps.LatLng(startLat, destinationLng);
   var yDistance = google.maps.geometry.spherical.computeDistanceBetween (latLngA, latLngB);
 
   //console.log(yDistance);
 
-  distanceThreshold = distance;
+  distanceThreshold = distance/2000;
 
   latLngC = new google.maps.LatLng((startLat + destinationLat)/2 - 1/111*distanceThreshold/2, (startLng + destinationLng)/2);
   latLngD = new google.maps.LatLng((startLat + destinationLat)/2 + 1/111*distanceThreshold/2, (startLng + destinationLng)/2);
+  console.log((startLat + destinationLat)/2 - 1/111*distanceThreshold/2);
+}
+
+function drawMap() {
+  function renderDirections(result) {
+    var directionsRenderer = new google.maps.DirectionsRenderer();
+    directionsRenderer.setMap(map);
+    directionsRenderer.setDirections(result);
+  }
+
+  function requestDirections(startLat,startLng,destinationLat,destinationLng, wegPunkt) {
+    var directionsService = new google.maps.DirectionsService();
+
+    console.log('furz');
+    console.log(wegPunkt.lat(), wegPunkt.lng());
+
+    directionsService.route({
+      origin: new google.maps.LatLng(startLat,startLng),
+      destination: new google.maps.LatLng(destinationLat,destinationLng),
+      waypoints: [
+        {
+          location: wegPunkt,
+          stopover: false
+        }
+      ],
+      travelMode: google.maps.DirectionsTravelMode.DRIVING
+    }, function(result) {
+      renderDirections(result);
+    });
+  }
+
+  var onChangeHandler = function() {
+    var directionsService = new google.maps.DirectionsService();
+    directionsService.route({
+      origin: new google.maps.LatLng(startLat,startLng),
+      destination: new google.maps.LatLng(destinationLat,destinationLng),
+      travelMode: google.maps.DirectionsTravelMode.DRIVING
+    }, function(result) {
+      getTheWayPoints(result);
+      var directionsRenderer = new google.maps.DirectionsRenderer();
+      directionsRenderer.setMap(map);
+      directionsRenderer.setDirections(result);
+      requestDirections(startLat,startLng,destinationLat,destinationLng, latLngC);
+      requestDirections(startLat,startLng,destinationLat,destinationLng, latLngD);
+    });
+  };
+  document.getElementById('submit').addEventListener('click', onChangeHandler);
 }
