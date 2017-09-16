@@ -182,7 +182,7 @@ function getTheWayPoints(response, directionsService) {
     var wayPointLng = new Array;
     var weatherPoint = new Array;
 
-    var maxprobability = 20;
+    var maxprobability = 50;
     var routevalue = 0;
 
 
@@ -190,8 +190,8 @@ function getTheWayPoints(response, directionsService) {
         wayPointLat[i] = response.routes[0].legs[0].steps[i].lat_lngs[0].lat();
         wayPointLng[i] = response.routes[0].legs[0].steps[i].lat_lngs[0].lng();
         if (i % numbOfWeatherpoints == 0) {
-            if (geocode_weather(wayPointLat[i],wayPointLng[i]).precipitation > maxprobability) {
-                window.alert("It's raining cats and dogs")
+            if (geocode_weather(wayPointLat[i],wayPointLng[i]).probability > maxprobability) {
+                window.alert("It's raining cats and dogs");
                 return -1; // Abbruch
             }
             else weatherPoint[i/numbOfWeatherpoints] = geocode_weather(wayPointLat[i],wayPointLng[i]).expectation;
