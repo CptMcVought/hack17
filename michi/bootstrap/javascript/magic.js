@@ -4,6 +4,8 @@ function initialize() {
     initDestinationAutocomplete();
 }
 var map, marker, startLat, startLng, destinationLat, destinationLng;
+var waypts = [];
+
 
 function initMap() {
     var directionsService = new google.maps.DirectionsService;
@@ -15,6 +17,7 @@ function initMap() {
         },
         zoom: 8
     });
+
     directionsDisplay.setMap(map);
 
     var onChangeHandler = function() {
@@ -123,11 +126,12 @@ function calculateAndDisplayRoute(directionsService, directionsDisplay) {
     directionsService.route({
         origin: start,
         destination: new google.maps.LatLng(destinationLat, destinationLng),
+        waypoints: waypts,
         travelMode: document.getElementById('transport').value
     }, function(response, status) {
         if (status === 'OK') {
             directionsDisplay.setDirections(response);
-            getTheWayPoints(response);
+            getTheWayPoints(response, directionsService);
         } else {
             window.alert('Directions request failed due to ' + status);
         }
@@ -135,9 +139,10 @@ function calculateAndDisplayRoute(directionsService, directionsDisplay) {
 }
 
 
-function getTheWayPoints(response) {
+function getTheWayPoints(response, directionsService) {
     //console.log(response.routes[0].legs[0].steps.length);
     //console.log(response.routes[0].legs[0].steps[0].lat_lngs[0].lat());
+    //console.log(response.routes);
 
     var numbOfPoints = response.routes[0].legs[0].steps.length;
     var wayPointLat = new Array;
@@ -149,8 +154,41 @@ function getTheWayPoints(response) {
         wayPointLat[j] = response.routes[0].legs[0].steps[i].lat_lngs[0].lat();
         wayPointLng[j] = response.routes[0].legs[0].steps[i].lat_lngs[0].lng()
       }
-      //Timi da chunnt din JSON GAGGI iä
     }
-  console.log(wayPointLat.length);
+  //Timi da chunnt din JSON GAGGI iä
+  distanceStuff(750, directionsService);
 }
 
+function distanceStuff(distanceThreshold) {
+
+  var latLngA = new google.maps.LatLng(startLat,startLng);
+  var latLngB = new google.maps.LatLng(destinationLat, destinationLng);
+  var distance = google.maps.geometry.spherical.computeDistanceBetween (latLngA, latLngB);
+  //console.log(distance);
+
+  var latLngA = new google.maps.LatLng(startLat,startLng);
+  var latLngB = new google.maps.LatLng(destinationLat, startLng);
+  var xDistance = google.maps.geometry.spherical.computeDistanceBetween (latLngA, latLngB);
+
+  //console.log(xDistance);
+
+  var latLngA = new google.maps.LatLng(startLat,startLng);
+  var latLngB = new google.maps.LatLng(startLat, destinationLng);
+  var yDistance = google.maps.geometry.spherical.computeDistanceBetween (latLngA, latLngB);
+
+  //console.log(yDistance);
+
+
+  var latLngC = new google.maps.LatLng((startLat + destinationLat)/2 - 1/111*distanceThreshold/2, (startLng + destinationLng)/2);
+  var latLngD = new google.maps.LatLng((startLat + destinationLat)/2 + 1/111*distanceThreshold/2, (startLng + destinationLng)/2);
+
+  var start = {lat: startLat, lng: startLng};
+
+  if (waypts.length > 0) waypts.pop();
+  else {
+    waypts.push({
+      location: latLngD,
+      stopover: true
+    });
+  }
+}
