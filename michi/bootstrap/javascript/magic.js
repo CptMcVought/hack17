@@ -4,6 +4,7 @@ var routeValueA, routeValueB, routeValueC;
 
 var result1,result2,result3;
 var resulti = [];
+var readyRender = false;
 
 
 function initialize() {
@@ -300,10 +301,21 @@ function drawMap() {
       resulti[0] = result;
       requestDirections(startLat,startLng,destinationLat,destinationLng, latLngC, function(result){
         resulti[1] = result;
+        if(readyRender==true){
+          renderDirections();
+        }
+        else{ 
+          readyRender = true;
+        }
       });
       requestDirections(startLat,startLng,destinationLat,destinationLng, latLngD, function(result){
         resulti[2] = result;
-        renderDirections();
+        if(readyRender==true){
+          renderDirections();
+        }
+        else{ 
+          readyRender = true;
+        }
       });
     });
   };
@@ -312,7 +324,8 @@ function drawMap() {
 
 function renderDirections() {
   console.log("render");
-  for(var i;i<3;i++){
+  readyRender = false;
+  for(var i=0;i<3;i++){
     var directionsRenderer = new google.maps.DirectionsRenderer();
     directionsRenderer.setMap(map);
     directionsRenderer.setDirections(resulti[i]);
