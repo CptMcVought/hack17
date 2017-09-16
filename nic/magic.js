@@ -141,10 +141,50 @@ function getTheWayPoints(response) {
     var numbOfPoints = response.routes[0].legs[0].steps.length;
     var wayPointLat = new Array;
     var wayPointLng = new Array;
+    var weatherPoint = new Array;
+
+    var maxprobability = 20;
+    var routevalue;
+
 
     for (var i = 0; i < numbOfPoints; i++){
         wayPointLat[i] = response.routes[0].legs[0].steps[i].lat_lngs[0].lat();
-        wayPointLng[i] = response.routes[0].legs[0].steps[i].lat_lngs[0].lng()
-        //Timi da chunnt din JSON GAGGI iä
+        wayPointLng[i] = response.routes[0].legs[0].steps[i].lat_lngs[0].lng();
+        if (i % 10 == 0) {
+            if (geocode_weather(wayPointLat[i],wayPointLng[i]).precipitation > 20)
+                return -1;
+            else weatherPoint[i/10] = geocode_weather(wayPointLat[i],wayPointLng[i]).expectation;
+        }
     }
+    for (int j = 0, j < weatherPoint.length, j++) {
+        routevalue += weatherPoint[j];
+    }
+    routevalue = routevalue/numbOfPoints;
+}
+
+function geocode_weather(latitude,longitude) {
+    var link = "https://api.weather.com/v1/geocode/" + latitude + "/" + longitude + "/forecast/daily/10day.json?apiKey=626505b9091f4982a505b9091f798235&units=m";
+    console.log(link);
+    var Httpreq = new XMLHttpRequest();
+    Httpreq.open("GET",link,false);
+    Httpreq.send(null);
+    obj_text = Httpreq.responseText;
+    obj_json = JSON.parse(obj_text);
+
+    /*var day = date.slice(0,2);
+    var month = date.slice(3,5);
+    var year = date.slice(6,10);
+
+    var date_string = year + "-" + month + "-" + day;
+
+    console.log(date_string);
+
+    for (i in obj_json.forecasts) {
+        document.write(obj_json.forecasts[i].fcst_valid_local);
+    }
+    */
+    var prob = obj_json.forecasts[0].day.pop;
+    var precipitation = obj_json.forecasts[0].day.qpf;
+
+    return {probability: prob, quantity: precipitation, expectation: prob*precipitation};
 }
