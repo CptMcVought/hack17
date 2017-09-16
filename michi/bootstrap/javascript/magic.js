@@ -2,6 +2,9 @@ var map, marker, startLat, startLng, destinationLat, destinationLng;
 var latLngC, latLngD, latLngA;
 var routeValueA, routeValueB, routeValueC;
 
+var result1,result2,result3;
+
+
 function initialize() {
     drawMap();
     initAutocomplete();
@@ -250,4 +253,67 @@ function geocode_weather(latitude,longitude) {
       });
     };
     document.getElementById('submit').addEventListener('click', onChangeHandler);
+
+  latLngC = new google.maps.LatLng((startLat + destinationLat)/2 - 1/111*distanceThreshold/2, (startLng + destinationLng)/2);
+  latLngD = new google.maps.LatLng((startLat + destinationLat)/2 + 1/111*distanceThreshold/2, (startLng + destinationLng)/2);
+  console.log((startLat + destinationLat)/2 - 1/111*distanceThreshold/2);
+}
+
+function drawMap() {
+
+
+  function requestDirections(startLat,startLng,destinationLat,destinationLng, wegPunkt) {
+    var directionsService = new google.maps.DirectionsService();
+
+    console.log('furz');
+    console.log(wegPunkt.lat(), wegPunkt.lng());
+
+    directionsService.route({
+      origin: new google.maps.LatLng(startLat,startLng),
+      destination: new google.maps.LatLng(destinationLat,destinationLng),
+      waypoints: [
+        {
+          location: wegPunkt,
+          stopover: false
+        }
+      ],
+      travelMode: google.maps.DirectionsTravelMode.DRIVING
+    }, function(result) {
+      return result;
+    });
+  }
+
+  var onChangeHandler = function() {
+    var polylineOptionsActual = {
+      strokeColor: '#459294',
+      strokeOpacity: 1.0,
+      strokeWeight: 10
+      };
+
+    var directionsService = new google.maps.DirectionsService();
+    directionsService.route({
+      origin: new google.maps.LatLng(startLat,startLng),
+      destination: new google.maps.LatLng(destinationLat,destinationLng),
+      travelMode: google.maps.DirectionsTravelMode.DRIVING
+    }, function(result) {
+      getTheWayPoints(result);
+      result1 = result;
+      result2 = requestDirections(startLat,startLng,destinationLat,destinationLng, latLngC);
+      result3 = requestDirections(startLat,startLng,destinationLat,destinationLng, latLngD);
+      renderDirections();
+    });
+  };
+  document.getElementById('submit').addEventListener('click', onChangeHandler);
+}
+
+function renderDirections() {
+    var directionsRenderer1 = new google.maps.DirectionsRenderer();
+    directionsRenderer.setMap(map);
+    directionsRenderer.setDirections(result1);
+    var directionsRenderer2 = new google.maps.DirectionsRenderer();
+    directionsRenderer.setMap(map);
+    directionsRenderer.setDirections(result2);
+    var directionsRenderer3 = new google.maps.DirectionsRenderer();
+    directionsRenderer.setMap(map);
+    directionsRenderer.setDirections(result2);
   }
