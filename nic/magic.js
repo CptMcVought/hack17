@@ -152,14 +152,14 @@ function getTheWayPoints(response) {
         wayPointLng[i] = response.routes[0].legs[0].steps[i].lat_lngs[0].lng();
         if (i % 10 == 0) {
             if (geocode_weather(wayPointLat[i],wayPointLng[i]).precipitation > 20)
-                return -1;
+                return -1; // Abbruch
             else weatherPoint[i/10] = geocode_weather(wayPointLat[i],wayPointLng[i]).expectation;
         }
     }
     for (int j = 0, j < weatherPoint.length, j++) {
         routevalue += weatherPoint[j];
     }
-    routevalue = routevalue/numbOfPoints;
+    return routevalue/numbOfPoints;
 }
 
 function geocode_weather(latitude,longitude) {
