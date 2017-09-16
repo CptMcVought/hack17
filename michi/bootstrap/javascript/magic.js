@@ -10,8 +10,8 @@ function initMap() {
     var directionsDisplay = new google.maps.DirectionsRenderer;
     map = new google.maps.Map(document.getElementById('map'), {
         center: {
-            lat: -34.397,
-            lng: 150.644
+            lat: 46.90065,
+            lng: 8.536703
         },
         zoom: 8
     });
