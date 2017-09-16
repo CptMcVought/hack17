@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css?family=Noto+Sans:700');
 body, html{
 	width: 100%;
 	height: 100%;
@@ -18,11 +19,16 @@ body, html{
 }
 .map{
 	background-color: rgb(40,40,40);
-	flex-basis: 80%;
+	flex-grow: 1;
 	z-index: 1;
+	/*filter: grayscale(100%) contrast(80%);
+	transition: 0.5s ease;*/
 }
-h1{
-	color: rgb(40,40,40);
+.map:hover{
+	filter: grayscale(0%) contrast(100%);
+}
+h1, h2{
+	color: rgb(60,60,60);
 }
 form label{
 	color: rgb(40,40,40);
@@ -33,4 +39,82 @@ form{
 }
 button{
 	height: 40px;
+}
+
+.info {
+	width: 60px;
+	float: left;
+	height: 100%;
+	background-color: rgb(245,245,245);
+}
+
+.info a {
+    background-color: #eee; /* Grey background color */
+    color: black; /* Black text color */
+    display: block; /* Make the links appear below each other */
+    padding: 11px; /* Add some padding */
+    text-decoration: none; /* Remove underline from links */
+    text-align: center;
+}
+
+.info a:hover {
+    background-color: #ccc; /* Dark grey background on mouse-over */
+}
+
+.info a.active {
+    background-color: rgb(0,125,255); /* Add a green color to the "active/current" link */
+    color: white;
+}
+
+.pramie{
+	width: 60vw;
+	margin-left: 60px;
+	background: #ffffff url("../img/zurich1.jpg") no-repeat right top;
+	background-size: cover;
+	height: 100%;
+	text-align: center;
+
+	padding: 20px;
+}
+
+.wrapright{
+	height: 100%;
+	left: 100vw;
+	top: 0;
+	position: absolute;
+	z-index: 2;
+	box-shadow: rgba(0,0,0,0.1) 5px 0px 30px;
+}
+
+.wrappramie{
+	margin-left: auto;
+	margin-right: auto;
+	width: 92%;
+	margin-top: 90px;
+	display: flex;
+	justify-content: space-evenly;
+}
+
+.pramiebox{
+	background-color: white;
+	width: 16vw;
+	height: 28vw;
+	box-shadow: rgba(0,0,0,0.2) 5px 0px 30px;
+	filter: brightness(0.97);
+	transition: 0.25s ease;
+}
+.pramiebox:hover{
+	filter: brightness(1);
+	box-shadow: rgba(0,0,0,0.4) 5px 0px 30px;
+}
+h3{
+	font-size: 50px;
+    font-family: 'Noto Sans';
+    color: #4689C8;
+}
+h5{
+	color: #4689C8;
+}
+.pramiebox button{
+	background-color: #B6DDFE;
 }

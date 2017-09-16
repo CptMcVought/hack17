@@ -27,7 +27,7 @@
                   <option value="BICYCLING">With Bike</option>
                   <option value="WALKING">On Foot</option>
                   <option value="DRIVING">With Car</option>
-                  <option value="TRAMSOT">With Train</option>
+                  <option value="TRANSIT">With Train</option>
                 </select>
               </div>
 
@@ -37,8 +37,8 @@
               </div>
 
               <div class="form-group">
-                <label for="navLabel">Max. detour in [km]</label>
-                <input type="number" class="form-control" id="detour" data-slider-id='ex1Slider' type="text" data-slider-min="0" data-slider-max="500" data-slider-step="1" data-slider-value="50" placeholder="Ex. 50" />
+                <label for="navLabel">Max. Rainprobability [%]</label>
+                <input type="number" class="form-control" id="prob" data-slider-id='ex1Slider' type="text" data-slider-min="0" data-slider-max="500" data-slider-step="1" data-slider-value="50" placeholder="Ex. 50" />
               </div>
 
               <div class="form-group">
@@ -51,10 +51,34 @@
         </form>
         <button type="submit" class="btn btn-primary" id="submit">Submit</button>
         </div>
+
         <div class="map" id="map">
           maps
         </div>
-    </div>
+
+      </div>
+
+      <div class = "wrapright">
+
+        <div class="info">
+          <div class="vertical-menu">
+            <a href="#" class="active">Route 1</a>
+            <a href="#">Route 2</a>
+            <a href="#">Route 3</a>
+          </div>
+        </div>
+
+        <div class="pramie">
+          <h1>Prämienberechnung</h1>
+          <div class="wrappramie">
+            <div class="pramiebox pram1"><img src="img/level1.png" width="100%"><h5>40% Rückerstattung<h5><h3>47.-</h3><button type="submit" class="btn btn-primary" id="submit">Offerte</button></div>
+            <div class="pramiebox pram2"><img src="img/level2.png" width="100%"><h5>70% Rückerstattung<h5><h3>69.-</h3><button type="submit" class="btn btn-primary" id="submit">Offerte</button></div>
+            <div class="pramiebox pram3"><img src="img/level3.png" width="100%"><h5>100% Rückerstattung<h5><h3>113.-</h3><button type="submit" class="btn btn-primary" id="submit">Offerte</button></div>
+          </div>
+        </div>
+
+      </div>
+
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
@@ -62,8 +86,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
 
-    <script src="magic.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCUh1BO6WuwAyxeeBwMFsDnq1T_8vjkwkk&signed_in=true&libraries=places&callback=initialize" async defer></script>
+
+    <script src="https://code.jquery.com/jquery-3.1.0.js"></script>
 
     <script type="text/javascript" src="javascript/verreis.js"></script>
     <script type="text/javascript" src="javascript/magic.js"></script>
