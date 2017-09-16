@@ -1,8 +1,7 @@
 var map, marker, startLat, startLng, destinationLat, destinationLng;
 var latLngC, latLngD, latLngA;
-var routeValueA, routeValueB, routeValueC;
+var routeValueA, routeValueB, routeValueC, beschti;
 
-var result1,result2,result3;
 var resulti = [];
 var readyRender = false;
 
@@ -150,6 +149,8 @@ function getTheWayPoints(response) {
   }
   console.log(routevalue);
   distanceStuff();
+
+  return routevalue/weatherPoint.length;
 }
 
 function geocode_weather(latitude,longitude) {
@@ -212,58 +213,6 @@ function distanceStuff() {
 }
 
 function drawMap() {
-  function renderDirections(result) {
-    var directionsRenderer = new google.maps.DirectionsRenderer();
-    directionsRenderer.setMap(map);
-    directionsRenderer.setDirections(result);
-  }
-
-  function requestDirections(startLat,startLng,destinationLat,destinationLng, wegPunkt, routeValue) {
-    var directionsService = new google.maps.DirectionsService();
-
-    console.log('furz');
-
-    directionsService.route({
-      origin: new google.maps.LatLng(startLat,startLng),
-      destination: new google.maps.LatLng(destinationLat,destinationLng),
-      waypoints: [
-        {
-          location: wegPunkt,
-          stopover: false
-        }
-      ],
-      travelMode: google.maps.DirectionsTravelMode.DRIVING
-    }, function(result) {
-      getTheWayPoints(result);
-      renderDirections(result);
-    });
-  }
-
-  var onChangeHandler = function() {
-    var directionsService = new google.maps.DirectionsService();
-    directionsService.route({
-      origin: new google.maps.LatLng(startLat,startLng),
-      destination: new google.maps.LatLng(destinationLat,destinationLng),
-      travelMode: google.maps.DirectionsTravelMode.DRIVING
-    }, function(result) {
-      getTheWayPoints(result);
-      var directionsRenderer = new google.maps.DirectionsRenderer();
-      directionsRenderer.setMap(map);
-      directionsRenderer.setDirections(result);
-      requestDirections(startLat,startLng,destinationLat,destinationLng, latLngC, routeValueB);
-      requestDirections(startLat,startLng,destinationLat,destinationLng, latLngD, routeValueC);
-    });
-  };
-  document.getElementById('submit').addEventListener('click', onChangeHandler);
-
-  latLngC = new google.maps.LatLng((startLat + destinationLat)/2 - 1/111*distanceThreshold/2, (startLng + destinationLng)/2);
-  latLngD = new google.maps.LatLng((startLat + destinationLat)/2 + 1/111*distanceThreshold/2, (startLng + destinationLng)/2);
-  console.log((startLat + destinationLat)/2 - 1/111*distanceThreshold/2);
-}
-
-function drawMap() {
-
-
   function requestDirections(startLat,startLng,destinationLat,destinationLng, wegPunkt, callback) {
     var directionsService = new google.maps.DirectionsService();
 
@@ -297,10 +246,11 @@ function drawMap() {
       destination: new google.maps.LatLng(destinationLat,destinationLng),
       travelMode: google.maps.DirectionsTravelMode.DRIVING
     }, function(result) {
-      getTheWayPoints(result);
+      routeValueA = getTheWayPoints(result);
       resulti[0] = result;
       requestDirections(startLat,startLng,destinationLat,destinationLng, latLngC, function(result){
         resulti[1] = result;
+        routeValueB = getTheWayPoints(result);
         if(readyRender==true){
           renderDirections();
         }
@@ -310,6 +260,7 @@ function drawMap() {
       });
       requestDirections(startLat,startLng,destinationLat,destinationLng, latLngD, function(result){
         resulti[2] = result;
+        routeValueC = getTheWayPoints(result);
         if(readyRender==true){
           renderDirections();
         }
@@ -322,12 +273,60 @@ function drawMap() {
   document.getElementById('submit').addEventListener('click', onChangeHandler);
 }
 
+var polylineHighlight = {strokeColor: '#427af4',strokeOpacity: 1.0,strokeWeight: 10};
+var polylineLowlight = {strokeColor: '#a5c1ff',strokeOpacity: 0.8,strokeWeight: 10};
+
 function renderDirections() {
-  console.log("render");
+
   readyRender = false;
   for(var i=0;i<3;i++){
-    var directionsRenderer = new google.maps.DirectionsRenderer();
+    if(i==beschti){
+      var polyline = polylineHighlight;
+    }
+    else{
+      var polyline = polylineLowlight;
+    }
+    var directionsRenderer = new google.maps.DirectionsRenderer({suppressMarkers: true, polylineOptions: polyline});
     directionsRenderer.setMap(map);
     directionsRenderer.setDirections(resulti[i]);
   }
+
+  var routeArray = {routeValueA, routeValueB, routeValueC};
+  beschti = indexOfMin(routeArray);
+}
+
+$( document ).ready(function() {
+  $("#route1").hover(function() {
+    highlight = 0;
+    renderDirections();
+  });
+  $("#route2").hover(function() {
+    highlight = 1;
+    renderDirections();
+  });
+  $("#route1").hover(function() {
+    highlight = 2;
+    renderDirections();
+  });
+});
+
+  var routeArray = {routeValueA, routeValueB, routeValueC};
+  beschti = indexOfMin(routeArray);
+
+function indexOfMin(arr) {
+  if (arr.length === 0) {
+    return -1;
+  }
+
+  var min = arr[0];
+  var minIndex = 0;
+
+  for (var i = 1; i < arr.length; i++) {
+    if (arr[i] < min) {
+      minIndex = i;
+      min = arr[i];
+    }
+  }
+
+  return minIndex;
 }
