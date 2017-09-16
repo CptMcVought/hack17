@@ -146,31 +146,33 @@ function getTheWayPoints(response, directionsService) {
     //console.log(response.routes);
 
     var numbOfPoints = response.routes[0].legs[0].steps.length;
+    var numbOfWeatherpoints = Math.round(numbOfPoints/20)
+    console.log(numbOfWeatherpoints);
     var wayPointLat = new Array;
     var wayPointLng = new Array;
     var weatherPoint = new Array;
 
-    var maxprobability = 20;
+    var maxprobability = 50;
     var routevalue = 0;
 
 
     for (var i = 0; i < numbOfPoints; i++){
         wayPointLat[i] = response.routes[0].legs[0].steps[i].lat_lngs[0].lat();
         wayPointLng[i] = response.routes[0].legs[0].steps[i].lat_lngs[0].lng();
-        if (i % 10 == 0) {
-            if (geocode_weather(wayPointLat[i],wayPointLng[i]).precipitation > maxprobability)
+        if (i % numbOfWeatherpoints == 0) {
+            /*if (geocode_weather(wayPointLat[i],wayPointLng[i]).probability > maxprobability) {
+                window.alert("It's raining cats and dogs");
                 return -1; // Abbruch
-            else weatherPoint[i/10] = geocode_weather(wayPointLat[i],wayPointLng[i]).expectation;
+            }
+            else */weatherPoint[i/numbOfWeatherpoints] = geocode_weather(wayPointLat[i],wayPointLng[i]).expectation;
         }
     }
     distanceStuff(directionsService);
     for (var j = 0; j < weatherPoint.length; j++) {
-        console.log(weatherPoint[j] + "," + wayPointLat[10*j] + "," + wayPointLng[10*j]);
+        console.log(weatherPoint[j] + "," + wayPointLat[numbOfWeatherpoints*j] + "," + wayPointLng[numbOfWeatherpoints*j]);
         routevalue += weatherPoint[j];
     }
     distanceStuff(750, directionsService);
-
-    window.alert(routevalue/weatherPoint.length)
 
 }
 
