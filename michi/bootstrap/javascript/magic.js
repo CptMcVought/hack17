@@ -193,7 +193,6 @@ function getTheWayPoints(response, directionsService) {
             else weatherPoint[i/10] = geocode_weather(wayPointLat[i],wayPointLng[i]).expectation;
         }
     }
-    //Timi da chunnt din JSON GAGGI iä
     distanceStuff(directionsService);
     for (var j = 0; j < weatherPoint.length; j++) {
         routevalue += weatherPoint[j];
@@ -206,7 +205,6 @@ function getTheWayPoints(response, directionsService) {
 
 function geocode_weather(latitude,longitude) {
     var link = "https://api.weather.com/v1/geocode/" + latitude + "/" + longitude + "/forecast/daily/10day.json?apiKey=626505b9091f4982a505b9091f798235&units=m";
-    console.log(link);
     var Httpreq = new XMLHttpRequest();
     Httpreq.open("GET",link,false);
     Httpreq.send(null);
@@ -235,6 +233,7 @@ function geocode_weather(latitude,longitude) {
         var precipitation = obj_json.forecasts[1].day.qpf;
     }
 
+    console.log(prob, precipitation, prob*precipitation);
 
     return {probability: prob, quantity: precipitation, expectation: prob*precipitation};
 }
