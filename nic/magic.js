@@ -127,15 +127,24 @@ function calculateAndDisplayRoute(directionsService, directionsDisplay) {
     }, function(response, status) {
         if (status === 'OK') {
             directionsDisplay.setDirections(response);
-            console.log(response.routes);
-            console.log(response.routes[0].legs[0].steps[0].lat_lngs[0].lat());
+            getTheWayPoints(response);
         } else {
             window.alert('Directions request failed due to ' + status);
         }
     });
 }
 
-function getTheWayPoints(directionsService) {
+function getTheWayPoints(response) {
+    console.log(response.routes[0].legs[0].steps.length);
+    console.log(response.routes[0].legs[0].steps[0].lat_lngs[0].lat());
 
-    console.log(wayPoints);
+    var numbOfPoints = response.routes[0].legs[0].steps.length;
+    var wayPointLat = new Array;
+    var wayPointLng = new Array;
+
+    for (var i = 0; i < numbOfPoints; i++){
+        wayPointLat[i] = response.routes[0].legs[0].steps[0].lat_lngs[0].lat();
+        wayPointLng[i] = response.routes[0].legs[0].steps[0].lat_lngs[0].lng()
+        //Timi da chunnt din JSON GAGGI iä
+    }
 }
