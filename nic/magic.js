@@ -143,8 +143,8 @@ function getTheWayPoints(response) {
     var wayPointLng = new Array;
 
     for (var i = 0; i < numbOfPoints; i++){
-        wayPointLat[i] = response.routes[0].legs[0].steps[0].lat_lngs[0].lat();
-        wayPointLng[i] = response.routes[0].legs[0].steps[0].lat_lngs[0].lng()
+        wayPointLat[i] = response.routes[0].legs[0].steps[i].lat_lngs[0].lat();
+        wayPointLng[i] = response.routes[0].legs[0].steps[i].lat_lngs[0].lng()
         //Timi da chunnt din JSON GAGGI iä
     }
 }
