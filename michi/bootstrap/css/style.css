@@ -1,0 +1,36 @@
+body, html{
+	width: 100%;
+	height: 100%;
+}
+
+.wrapper{
+	height: 100%;
+	display: flex;
+}
+
+.nav{
+	background-color: rgb(245,245,245);
+	flex-basis: 20%;
+	padding: 10px;
+	border-right: solid rgba(210,210,21,0.2) 1px;
+	box-shadow: rgba(0,0,0,0.1) 5px 0px 30px;
+	z-index: 2;
+}
+.map{
+	background-color: rgb(40,40,40);
+	flex-basis: 80%;
+	z-index: 1;
+}
+h1{
+	color: rgb(40,40,40);
+}
+form label{
+	color: rgb(40,40,40);
+}
+form{    
+	width: 100%;
+    padding-right: 10px;
+}
+button{
+	height: 40px;
+}
