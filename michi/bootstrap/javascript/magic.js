@@ -25,36 +25,6 @@ function initMap() {
         calculateAndDisplayRoute(directionsService, directionsDisplay);
     };
     document.getElementById('submit').addEventListener('click', onChangeHandler);
-
-    var onChangeHandler1 = function() {
-      if (waypts.length > 0) waypts.pop();
-      calculateAndDisplayRoute(directionsService, directionsDisplay);
-    };
-    document.getElementById('route1').addEventListener('mouseover', onChangeHandler1);
-
-    var onChangeHandler2 = function() {
-      if (waypts.length > 0) waypts.pop();
-      else {
-        waypts.push({
-          location: latLngC,
-          stopover: true
-        });
-      }
-      calculateAndDisplayRoute(directionsService, directionsDisplay);
-    };
-    document.getElementById('route2').addEventListener('mouseover', onChangeHandler2);
-
-    var onChangeHandler3 = function() {
-      if (waypts.length > 0) waypts.pop();
-      else {
-        waypts.push({
-          location: latLngD,
-          stopover: true
-        });
-      }
-      calculateAndDisplayRoute(directionsService, directionsDisplay);
-    };
-    document.getElementById('route3').addEventListener('mouseover', onChangeHandler3);
 }
 // This example displays an address form, using the autocomplete feature
 // of the Google Places API to help users fill in the information.
