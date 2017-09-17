@@ -55,6 +55,7 @@ button{
     padding: 11px; /* Add some padding */
     text-decoration: none; /* Remove underline from links */
     text-align: center;
+    transition: 0.4s ease;
 }
 
 .info a:hover {
@@ -128,4 +129,15 @@ h5{
 
 .map2{
   height: 50%;
+}
+
+.pramie h3, h6,#preis1{
+	transition: 0.4s ease;
+}
+h6{
+	font-size: 20px;
+}
+
+.nav img{
+	padding-top: 20px;
 }

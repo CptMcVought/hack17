@@ -1,16 +1,21 @@
 var map, marker, startLat, startLng, destinationLat, destinationLng;
 var latLngC, latLngD, latLngA;
 var routeValueA, routeValueB, routeValueC, beschti;
-
+var weatherPointsA, weatherPointsB, weatherPointsC;
+var highlight = 0;
 var resulti = [];
+var leaderboard = [];
 var readyRender = false;
+var active = 0;
+var counter = 0;
+
+var directionsRenderer1,directionsRenderer2,directionsRenderer3;
 
 
 function initialize() {
   drawMap();
   initAutocomplete();
   initDestinationAutocomplete();
-
 
   var start = new google.maps.LatLng(47,8);
   var myOptions = {
@@ -150,7 +155,12 @@ function getTheWayPoints(response) {
   console.log(routevalue);
   distanceStuff();
 
-  return routevalue/weatherPoint.length;
+  if(counter == 0) weatherPointsA = weatherPoint.length;
+  else if(counter == 1) weatherPointsB = weatherPoint.length;
+  else weatherPointsC = weatherPoint.length;
+  counter++;
+
+  return routevalue;
 }
 
 function geocode_weather(latitude,longitude) {
@@ -213,6 +223,10 @@ function distanceStuff() {
 }
 
 function drawMap() {
+  directionsRenderer1 = new google.maps.DirectionsRenderer();
+    directionsRenderer2 = new google.maps.DirectionsRenderer();
+    directionsRenderer3 = new google.maps.DirectionsRenderer();
+
   function requestDirections(startLat,startLng,destinationLat,destinationLng, wegPunkt, callback) {
     var directionsService = new google.maps.DirectionsService();
 
@@ -226,7 +240,7 @@ function drawMap() {
         }
       ],
       optimizeWaypoints: true,
-      travelMode: google.maps.DirectionsTravelMode.DRIVING
+      travelMode: document.getElementById('transport').value
     }, callback);
   }
 
@@ -241,7 +255,7 @@ function drawMap() {
     directionsService.route({
       origin: new google.maps.LatLng(startLat,startLng),
       destination: new google.maps.LatLng(destinationLat,destinationLng),
-      travelMode: google.maps.DirectionsTravelMode.DRIVING
+      travelMode: document.getElementById('transport').value
     }, function(result) {
       routeValueA = getTheWayPoints(result);
       resulti[0] = result;
@@ -271,40 +285,84 @@ function drawMap() {
 }
 
 var polylineHighlight = {strokeColor: '#427af4',strokeOpacity: 1.0,strokeWeight: 10};
-var polylineLowlight = {strokeColor: '#a5c1ff',strokeOpacity: 0.8,strokeWeight: 10};
+var polylineLowlight = {strokeColor: '#427af4',strokeOpacity: 0.3,strokeWeight: 7};
+
+
 
 function renderDirections() {
-  readyRender = false;
-  for(var i = 0; i < 3; i++){
-    if(i == beschti){
-      var polyline = polylineHighlight;
-    }
-    else{
-      var polyline = polylineLowlight;
-    }
-    var directionsRenderer = new google.maps.DirectionsRenderer({suppressMarkers: true, polylineOptions: polyline});
-    directionsRenderer.setMap(map);
-    directionsRenderer.setDirections(resulti[i]);
-  }
 
-  var routeArray = {routeValueA, routeValueB, routeValueC};
-  beschti = indexOfMin(routeArray);
+    directionsRenderer1.set('directions',null);
+    directionsRenderer2.set('directions',null);
+    directionsRenderer3.set('directions',null);
+
+    counter = 0;
+
+    readyRender = false;
+    var polyline = {polylineLowlight,polylineLowlight,polylineLowlight};
+
+    polyline[highlight] = polylineHighlight;
+
+    directionsRenderer1.setOptions({suppressMarkers: true, polylineOptions: polyline[0]});
+    directionsRenderer1.setMap(map);
+    directionsRenderer1.setDirections(resulti[0]);
+
+    directionsRenderer2.setOptions({suppressMarkers: true, polylineOptions: polyline[1]});
+    directionsRenderer2.setMap(map);
+    directionsRenderer2.setDirections(resulti[1]);
+
+    directionsRenderer3.setOptions({suppressMarkers: true, polylineOptions: polyline[2]});
+    directionsRenderer3.setMap(map);
+    directionsRenderer3.setDirections(resulti[2]);
+
+
+    var routeArray = {routeValueA, routeValueB, routeValueC};
+    beschti = indexOfMin(routeArray);
 }
 
 $( document ).ready(function() {
-  $("#route1").hover(function() {
+  $("#route1").mouseover(function() {
     highlight = 0;
     renderDirections();
   });
-  $("#route2").hover(function() {
+  $("#route2").mouseover(function() {
     highlight = 1;
+    console.log("rout1");
     renderDirections();
   });
-  $("#route1").hover(function() {
+  $("#route3").mouseover(function() {
     highlight = 2;
     renderDirections();
   });
+
+  $("#route1").	click(function() {
+    active = 0;
+    $(".vertical-menu a").removeClass('active');
+    $("#route1").addClass('active');
+    console.log(routeValueA);
+    preisli(routeValueA);
+    $("#erwartigswert").html('Erwarteter Regen: ' + extround(routeValueA/weatherPointsA,1)+'mm');
+  });
+  $("#route2").	click(function() {
+    active = 1;
+    $(".vertical-menu a").removeClass('active');
+    $("#route2").addClass('active');
+    preisli(routeValueB);
+    $("#erwartigswert").html('Erwarteter Regen: ' + extround(routeValueB/weatherPointsB,1)+'mm');
+  });
+  $("#route3").	click(function() {
+    active = 2;
+    $(".vertical-menu a").removeClass('active');
+    $("#route3").addClass('active');
+    preisli(routeValueC);
+    $("#erwartigswert").html('Erwarteter Regen: ' + extround(routeValueC/weatherPointsC,1)+'mm');
+  });
 });
+
+function preisli(value){
+  $("#preis1").html(extround(3*value,1)+'.-');
+    $("#preis2").html(extround(5*value,1)+'.-');
+    $("#preis3").html(extround(7*value,1)+'.-');
+}
 
   var routeArray = {routeValueA, routeValueB, routeValueC};
   beschti = indexOfMin(routeArray);
@@ -325,4 +383,9 @@ function indexOfMin(arr) {
   }
 
   return minIndex;
+}
+
+function extround(zahl,n_stelle) {
+    zahl = (Math.round(zahl * n_stelle) / n_stelle);
+    return zahl;
 }
