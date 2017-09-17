@@ -216,9 +216,6 @@ function drawMap() {
   function requestDirections(startLat,startLng,destinationLat,destinationLng, wegPunkt, callback) {
     var directionsService = new google.maps.DirectionsService();
 
-    console.log('furz');
-    console.log(wegPunkt.lat(), wegPunkt.lng());
-
     directionsService.route({
       origin: new google.maps.LatLng(startLat,startLng),
       destination: new google.maps.LatLng(destinationLat,destinationLng),
@@ -277,10 +274,9 @@ var polylineHighlight = {strokeColor: '#427af4',strokeOpacity: 1.0,strokeWeight:
 var polylineLowlight = {strokeColor: '#a5c1ff',strokeOpacity: 0.8,strokeWeight: 10};
 
 function renderDirections() {
-
   readyRender = false;
-  for(var i=0;i<3;i++){
-    if(i==beschti){
+  for(var i = 0; i < 3; i++){
+    if(i == beschti){
       var polyline = polylineHighlight;
     }
     else{
